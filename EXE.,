@@ -1,0 +1,353 @@
+<!doctype html>
+< charset="utf-8">
+  <meta name="html lang="en">
+<head>
+  <meta
+viewport" content="width=device-width,initial-scale=1">
+  <title>Nexus Gaming Oasis</title>
+  <style>
+    :root{--accent:#6b5ce7;--muted:#f3f4f6;--card:#ffffff;--glass:rgba(255,255,255,0.06)}
+    *{box-sizing:border-box}
+    body{font-family:Inter, system-ui, Arial, sans-serif;margin:0;background:linear-gradient(180deg,#0f172a, #071128);color:#e6eef8;min-height:100vh}
+    header{display:flex;align-items:center;justify-content:space-between;padding:12px 20px;background:linear-gradient(90deg,rgba(255,255,255,0.03),transparent);backdrop-filter: blur(6px)}
+    .brand{display:flex;gap:12px;align-items:center}
+    .logo{width:44px;height:44px;border-radius:8px;background:linear-gradient(135deg,var(--accent),#f05f8e);display:flex;align-items:center;justify-content:center;font-weight:700}
+    nav{display:flex;gap:8px}
+    button, .btn{background:var(--accent);border:none;padding:8px 12px;border-radius:8px;color:white;cursor:pointer}
+    main{padding:18px;display:grid;grid-template-columns:320px 1fr 360px;gap:18px}
+    .panel{background:rgba(255,255,255,0.04);padding:12px;border-radius:12px}
+    .search{display:flex;gap:8px;margin-bottom:12px}
+    input[type=text]{flex:1;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.06);background:transparent;color:inherit}
+    .games-list{display:grid;gap:8px}
+    .game{display:flex;justify-content:space-between;align-items:center;padding:10px;border-radius:8px;background:linear-gradient(180deg, rgba(255,255,255,0.02), transparent)}
+    .content{min-height:60vh}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:12px;border-radius:12px;margin-bottom:12px}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+    .market-item{padding:10px;border-radius:8px;background:linear-gradient(180deg, rgba(0,0,0,0.2), rgba(255,255,255,0.01));}
+    footer{text-align:center;padding:18px;color:#9aa7bd}
+    @media (max-width:1000px){main{grid-template-columns:1fr; padding:12px} .logo{display:none}}
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="logo">NR</div>
+      <div>
+        <div style="font-weight:700">Nexus Gaming Oasis</div>
+        <div style="font-size:12px;color:#9aa7bd">All your games, communities & trading in one place</div>
+      </div>
+    </div>
+    <nav>
+      <button id="newCommunityBtn" class="btn">Create Community</button>
+      <button id="marketBtn" class="btn">Marketplace</button>
+      <button id="downloadsBtn" class="btn">Downloads</button>
+      <button id="signInBtn" class="btn">Sign in</button>
+    </nav>
+  </header>
+
+  <main>
+    <!-- left: games / categories -->
+    <aside class="panel">
+      <div class="search">
+        <input id="gameSearch" type="text" placeholder="Search games or communities...">
+        <button id="clearSearch" class="btn">Clear</button>
+      </div>
+      <div class="card">
+        <strong>Popular Games</strong>
+        <div class="games-list" id="gamesList">
+          <!-- populated by JS -->
+        </div>
+      </div>
+      <div class="card">
+        <strong>Your Account</strong>
+        <div id="accountBlock">
+          <div id="signedOutNotice">Not signed in</div>
+          <div id="signedInInfo" style="display:none">
+            <div id="userName"></div>
+            <div id="userEmail" style="font-size:12px;color:#9aa7bd"></div>
+            <button id="signOutBtn" class="btn" style="margin-top:8px">Sign out</button>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- center: main content -->
+    <section class="content">
+      <div class="card" id="homeCard">
+        <h2>Welcome to Nexus</h2>
+        <p>Create communities, trade items, chat with players, and download game clients from one hub.</p>
+      </div>
+
+      <div class="card" id="communitiesCard">
+        <h3>Communities</h3>
+        <div id="communitiesGrid" class="grid">
+          <!-- community cards injected here -->
+        </div>
+      </div>
+
+      <div class="card" id="marketCard">
+        <h3>Marketplace</h3>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <input id="itemName" placeholder="Item name" />
+          <input id="itemPrice" placeholder="Price (credits)" type="number" />
+          <button id="listItemBtn" class="btn">List Item</button>
+        </div>
+        <div id="marketGrid" class="grid"></div>
+      </div>
+
+      <div class="card" id="downloadsCard">
+        <h3>Downloads</h3>
+        <div id="downloadsGrid" class="grid">
+          <!-- downloads -->
+        </div>
+      </div>
+    </section>
+
+    <!-- right: chat / live feed -->
+    <aside class="panel">
+      <div class="card">
+        <h4>Live Chat</h4>
+        <div style="display:flex;gap:8px;margin-bottom:8px">
+          <select id="roomSelect"></select>
+          <button id="joinRoomBtn" class="btn">Join</button>
+        </div>
+        <div id="chatWindow" style="height:320px;overflow:auto;background:rgba(0,0,0,0.25);padding:8px;border-radius:8px"></div>
+        <div style="display:flex;gap:8px;margin-top:8px">
+          <input id="chatInput" placeholder="Say something..." />
+          <button id="sendChatBtn" class="btn">Send</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <h4>Activity Feed</h4>
+        <div id="feed" style="max-height:200px;overflow:auto"></div>
+      </div>
+    </aside>
+  </main>
+
+  <footer>
+    Built with ❤️ for gamers. Export, print, or host this file anywhere.
+  </footer>
+
+  <!-- Firebase SDKs (placeholder) -->
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
+  <script>
+    /***** CONFIGURE THIS with your Firebase project settings *****/
+    const firebaseConfig = {
+      apiKey: "YOUR_FIREBASE_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      databaseURL: "https://YOUR_PROJECT.firebaseio.com",
+      projectId: "YOUR_PROJECT",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "SENDER_ID",
+      appId: "APP_ID"
+    };
+    // initialize Firebase if config provided
+    let firebaseApp = null; let auth=null, db=null;
+    if (firebaseConfig && firebaseConfig.apiKey !== "YOUR_FIREBASE_API_KEY"){
+      firebaseApp = firebase.initializeApp(firebaseConfig);
+      auth = firebase.auth();
+      db = firebase.database();
+    } else {
+      console.warn('Firebase config not set. The app will run in local/demo mode only.');
+    }
+
+    // Demo data (merged past versions + improvements)
+    const defaultGames = [
+      {id:'roblox',title:'Roblox', link:'#', img:''},
+      {id:'fortnite',title:'Fortnite', link:'#', img:''},
+      {id:'cod',title:'Call of Duty', link:'#', img:''},
+      {id:'minecraft',title:'Minecraft', link:'#', img:''},
+      {id:'apex',title:'Apex Legends', link:'#', img:''}
+    ];
+
+    // State
+    const state = {
+      communities: [],
+      market: [],
+      downloads: [
+        {id:'dl1',title:'Roblox Installer', url:'#'},
+        {id:'dl2',title:'Fortnite Launcher', url:'#'},
+        {id:'dl3',title:'COD Patch', url:'#'}
+      ],
+      currentRoom: null,
+      user: null
+    };
+
+    // Utilities: simple uid
+    function uid(){return 'id-'+Math.random().toString(36).slice(2,9)}
+
+    // Load initial UI
+    function renderGames(){
+      const el = document.getElementById('gamesList'); el.innerHTML='';
+      defaultGames.forEach(g=>{
+        const div=document.createElement('div'); div.className='game';
+        div.innerHTML=`<div><strong>${g.title}</strong><div style='font-size:12px;color:#9aa7bd'>Community & chat</div></div><div><button class='btn small' data-game='${g.id}'>Open</button></div>`;
+        el.appendChild(div);
+      });
+      // attach open handlers
+      el.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>openCommunity(b.dataset.game)));
+    }
+
+    function renderCommunities(){
+      const grid = document.getElementById('communitiesGrid'); grid.innerHTML='';
+      const communities = JSON.parse(localStorage.getItem('nexus_communities')||'[]');
+      state.communities = communities;
+      if (communities.length===0){
+        grid.innerHTML='<div style="color:#9aa7bd">No communities yet. Create one!</div>';
+        return
+      }
+      communities.forEach(c=>{
+        const card=document.createElement('div'); card.className='card';
+        card.innerHTML=`<h4>${c.name}</h4><div style='font-size:13px;color:#9aa7bd'>${c.game || 'General'}</div><p style='font-size:13px'>${c.description||''}</p><div style='display:flex;gap:8px'><button class='btn' data-id='${c.id}'>Join Chat</button><button data-id='${c.id}' class='btn' style='background:#2b2f36'>View</button></div>`;
+        grid.appendChild(card);
+      });
+      // attach join handlers
+      grid.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+        const id=b.dataset.id; joinRoom(id);
+      }));
+    }
+
+    function openCommunity(gameId){
+      // attempt to find or create community for this game
+      const communities = JSON.parse(localStorage.getItem('nexus_communities')||'[]');
+      let found = communities.find(c=>c.game===gameId);
+      if (!found){
+        found = {id:uid(),name:gameId.toUpperCase()+' Community',game:gameId,description:'Official community for '+gameId};
+        communities.push(found); localStorage.setItem('nexus_communities',JSON.stringify(communities));
+      }
+      renderCommunities();
+      joinRoom(found.id);
+    }
+
+    // Marketplace
+    function renderMarket(){
+      const grid = document.getElementById('marketGrid'); grid.innerHTML='';
+      const items = JSON.parse(localStorage.getItem('nexus_market')||'[]');
+      state.market = items;
+      if (items.length===0) grid.innerHTML='<div style="color:#9aa7bd">No items listed yet.</div>';
+      items.forEach(it=>{
+        const d = document.createElement('div'); d.className='market-item';
+        d.innerHTML=`<strong>${it.name}</strong><div style='font-size:13px;color:#9aa7bd'>Seller: ${it.seller||'anonymous'}</div><div style='margin-top:8px'>Price: ${it.price} credits</div><div style='display:flex;gap:8px;margin-top:8px'><button class='btn' data-id='${it.id}'>Buy</button><button data-id='${it.id}' class='btn' style='background:#2b2f36'>Message Seller</button></div>`;
+        grid.appendChild(d);
+      });
+      grid.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>{
+        const id=b.dataset.id; if (b.textContent.trim()==='Buy') buyItem(id); else joinRoomForSeller(id);
+      }));
+    }
+    function listItem(name,price){
+      const items = JSON.parse(localStorage.getItem('nexus_market')||'[]');
+      const it={id:uid(),name,price:parseInt(price)||0,seller:state.user?state.user.displayName: 'guest'}; items.push(it); localStorage.setItem('nexus_market',JSON.stringify(items)); renderMarket(); addFeed(`Item listed: ${name} (${it.price} credits)`);
+    }
+    function buyItem(id){
+      let items = JSON.parse(localStorage.getItem('nexus_market')||'[]'); const it = items.find(x=>x.id===id); if(!it){alert('Item not found');return}
+      // demo: remove from list
+      items = items.filter(x=>x.id!==id); localStorage.setItem('nexus_market',JSON.stringify(items)); renderMarket(); addFeed(`Item purchased: ${it.name}`);
+    }
+
+    // Downloads
+    function renderDownloads(){
+      const g=document.getElementById('downloadsGrid'); g.innerHTML='';
+      state.downloads.forEach(d=>{
+        const el=document.createElement('div'); el.className='card'; el.innerHTML=`<strong>${d.title}</strong><div style='margin-top:6px'><a href='${d.url}' download target='_blank' class='btn'>Download</a></div>`; g.appendChild(el);
+      });
+    }
+
+    // Communities/rooms/Chat
+    function populateRooms(){
+      const select = document.getElementById('roomSelect'); select.innerHTML='';
+      const communities = JSON.parse(localStorage.getItem('nexus_communities')||'[]');
+      const fallback = [{id:'global',name:'Global Chat'}].concat(communities.map(c=>({id:c.id,name:c.name})));
+      fallback.forEach(r=>{const o=document.createElement('option');o.value=r.id;o.textContent=r.name;select.appendChild(o)});
+    }
+
+    function joinRoom(roomId){
+      state.currentRoom = roomId; document.getElementById('roomSelect').value = roomId; document.getElementById('chatWindow').innerHTML='';
+      addFeed(`Joined room ${roomId}`);
+      // load messages from localStorage (demo) or Firebase
+      if (db){
+        const ref = db.ref('rooms/'+roomId+'/messages');
+        ref.off(); // remove previous
+        ref.limitToLast(200).on('child_added',snap=>{
+          const m=snap.val(); appendMessage(m);
+        });
+      } else {
+        const msgs = JSON.parse(localStorage.getItem('nexus_chat_'+roomId)||'[]'); msgs.forEach(appendMessage);
+      }
+    }
+    function appendMessage(m){
+      const w = document.getElementById('chatWindow'); const d = document.createElement('div'); d.style.marginBottom='6px'; d.innerHTML=`<div style='font-size:13px'><strong>${m.user||'Anon'}</strong> <span style='font-size:11px;color:#9aa7bd'>${new Date(m.ts||Date.now()).toLocaleString()}</span></div><div style='font-size:14px'>${m.text}</div>`; w.appendChild(d); w.scrollTop = w.scrollHeight;
+    }
+
+    function sendMessage(){
+      const txt = document.getElementById('chatInput').value.trim(); if(!txt) return; const msg={user: state.user?state.user.displayName:'Guest',text:txt,ts:Date.now()};
+      if (!state.currentRoom) {alert('Join a room first');return}
+      if (db){
+        const ref = db.ref('rooms/'+state.currentRoom+'/messages'); ref.push(msg);
+      } else {
+        const key='nexus_chat_'+state.currentRoom; const msgs = JSON.parse(localStorage.getItem(key)||'[]'); msgs.push(msg); localStorage.setItem(key,JSON.stringify(msgs)); appendMessage(msg);
+      }
+      document.getElementById('chatInput').value='';
+    }
+
+    // Feed
+    function addFeed(txt){
+      const f = document.getElementById('feed'); const d = document.createElement('div'); d.style.padding='6px 0'; d.innerHTML=`<div style='font-size:13px'>${txt}</div><div style='font-size:11px;color:#9aa7bd'>${new Date().toLocaleTimeString()}</div>`; f.prepend(d);
+    }
+
+    // Sign-in / Sign-out (Firebase) or local demo
+    function beginAuth(){
+      if (!auth){
+        // demo prompt
+        const name = prompt('Demo sign-in name (will be stored locally)'); if (!name) return; state.user = {displayName:name,email:name+'@example.com'}; onSignIn(state.user); return;
+      }
+      const provider = new firebase.auth.GoogleAuthProvider();
+      auth.signInWithPopup(provider).then(result=>{
+        state.user = result.user; onSignIn(state.user);
+      }).catch(err=>{alert('Sign-in failed: '+err.message)});
+    }
+    function onSignIn(user){
+      document.getElementById('signedOutNotice').style.display='none'; document.getElementById('signedInInfo').style.display='block'; document.getElementById('userName').textContent = user.displayName; document.getElementById('userEmail').textContent = user.email; document.getElementById('signInBtn').style.display='none'; addFeed('Signed in as '+user.displayName);
+    }
+    function signOut(){
+      if (auth){auth.signOut().then(()=>{state.user=null; onSignOut();});}else{state.user=null; onSignOut();}
+    }
+    function onSignOut(){document.getElementById('signedOutNotice').style.display='block'; document.getElementById('signedInInfo').style.display='none'; document.getElementById('signInBtn').style.display='inline-block'; addFeed('Signed out');}
+
+    // small helpers
+    function joinRoomForSeller(itemId){
+      const items = JSON.parse(localStorage.getItem('nexus_market')||'[]'); const it = items.find(x=>x.id===itemId); if(!it) return; alert('You can message the seller in the chat. Join Global or the seller community and mention the item.');
+    }
+
+    // UI event wiring
+    window.addEventListener('DOMContentLoaded',()=>{
+      renderGames(); renderCommunities(); renderMarket(); renderDownloads(); populateRooms();
+      document.getElementById('listItemBtn').addEventListener('click',()=>{ const name=document.getElementById('itemName').value.trim(); const price=document.getElementById('itemPrice').value; if(!name) return alert('Enter item name'); listItem(name,price); document.getElementById('itemName').value=''; document.getElementById('itemPrice').value='';});
+      document.getElementById('sendChatBtn').addEventListener('click',sendMessage);
+      document.getElementById('joinRoomBtn').addEventListener('click',()=>joinRoom(document.getElementById('roomSelect').value));
+      document.getElementById('newCommunityBtn').addEventListener('click',()=>{
+        const name=prompt('Community name'); if(!name) return; const game=prompt('Game (e.g. fortnite)'); const desc=prompt('Short description'); const comm={id:uid(),name,game,description:desc}; const arr=JSON.parse(localStorage.getItem('nexus_communities')||'[]'); arr.push(comm); localStorage.setItem('nexus_communities',JSON.stringify(arr)); renderCommunities(); populateRooms(); addFeed('Community created: '+name);
+      });
+      document.getElementById('marketBtn').addEventListener('click',()=>{document.getElementById('marketCard').scrollIntoView()});
+      document.getElementById('downloadsBtn').addEventListener('click',()=>{document.getElementById('downloadsCard').scrollIntoView()});
+      document.getElementById('signInBtn').addEventListener('click',beginAuth);
+      document.getElementById('signOutBtn').addEventListener('click',signOut);
+      document.getElementById('clearSearch').addEventListener('click',()=>{document.getElementById('gameSearch').value='';renderGames();});
+      document.getElementById('gameSearch').addEventListener('input',(e)=>{
+        const q=e.target.value.toLowerCase(); const filtered = defaultGames.filter(g=>g.title.toLowerCase().includes(q)); const el=document.getElementById('gamesList'); el.innerHTML=''; filtered.forEach(g=>{const div=document.createElement('div'); div.className='game'; div.innerHTML=`<div><strong>${g.title}</strong><div style='font-size:12px;color:#9aa7bd'>Community & chat</div></div><div><button class='btn small' data-game='${g.id}'>Open</button></div>`; el.appendChild(div)});
+        el.querySelectorAll('button').forEach(b=>b.addEventListener('click',()=>openCommunity(b.dataset.game)));
+      });
+
+      // load feed from localStorage
+      const savedFeed = JSON.parse(localStorage.getItem('nexus_feed')||'[]'); savedFeed.forEach(f=>addFeed(f));
+    });
+
+    // persist feed periodically
+    setInterval(()=>{
+      const feed = Array.from(document.getElementById('feed').children).slice(0,20).map(n=>n.innerText); localStorage.setItem('nexus_feed', JSON.stringify(feed));
+    },5000);
+  </script>
+</body>
+</html>
